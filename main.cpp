@@ -17,6 +17,27 @@ struct Ball {
 	float result;
 	int IsEasing;
 };
+float EasingInQuad(float t);
+float EasingOutQuad(float t);
+float EasingInOutSine(float t);
+
+template<typename type>
+inline type Lerp(const type from, const type to, const float t) {
+	return type(from * (1 - t)) + type(to * t);
+}
+
+float EasingInQuad(float t) {
+	return t * t;
+}
+
+// 使わなかったけど関数
+float EasingOutQuad(float t) {
+	return 1 - EasingInQuad(1 - t);
+}
+
+float EasingInOutSine(float t) {
+	return -(cosf(t * (float)M_PI) - 1) / 2;
+}
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -27,15 +48,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Ball ball[4]{};
 
 	for (int i = 0; i < 4; i++) {
-		ball[i].position = { 50.0f,(i + 1) * 100.0f };
-		ball[i].StartPosition = { 50.0f,i*100.0f};
-		ball[i].EndPosition = { 1230.0f,i * 100.0f };
+		ball[i].position = { 50.0f, (i + 1) * 100.0f };
+		ball[i].StartPosition = { 50.0f, i * 100.0f };
+		ball[i].EndPosition = { 1230.0f, i * 100.0f };
 
 	}
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -70,15 +91,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					ball[i].result = -(cosf(float(M_PI) * ball[i].time) - 1) / 2;
 					ball[i].position.x = (1 - ball[i].result) * ball[i].StartPosition.x + ball[i].result * ball[i].EndPosition.x;
 				}
-				if (i ==2) {
-					ball[i].result = 1 - (1 - ball[i].time) * (1 - ball[i].time);
+				if (i == 2) {
+					ball[i].result = ball[i].time * ball[i].time;
 					ball[i].position.x = (1 - ball[i].result) * ball[i].StartPosition.x + ball[i].result * ball[i].EndPosition.x;
+				}
+				if (i == 3) {
+					ball[i].position.x = Lerp(ball[i].StartPosition.x, ball[i].EndPosition.x, EasingOutQuad(ball[i].time));
 				}
 			}
 
 		}
 
-		
+
 
 		///
 		/// ↑更新処理ここまで
