@@ -70,6 +70,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					ball[i].result = -(cosf(float(M_PI) * ball[i].time) - 1) / 2;
 					ball[i].position.x = (1 - ball[i].result) * ball[i].StartPosition.x + ball[i].result * ball[i].EndPosition.x;
 				}
+				if (i ==2) {
+					ball[i].result = 1 - (1 - ball[i].time) * (1 - ball[i].time);
+					ball[i].position.x = (1 - ball[i].result) * ball[i].StartPosition.x + ball[i].result * ball[i].EndPosition.x;
+				}
 			}
 
 		}
